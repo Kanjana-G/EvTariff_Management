@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Login - EV Tariff Management</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+
+<body class="login-page">
+
+
+<div class="login-container">
+
+    <div class="login-box">
+
+        <h1>EV Tariff Management</h1>
+
+        <p class="login-subtitle">
+            Sign in to continue
+        </p>
+
+
+        <div class="login-form">
+
+            <label for="login-username">
+                Username
+            </label>
+
+            <input
+                type="text"
+                id="login-username"
+                placeholder="Enter username"
+                autocomplete="username"
+            >
+
+
+            <label for="login-password">
+                Password
+            </label>
+
+            <input
+                type="password"
+                id="login-password"
+                placeholder="Enter password"
+                autocomplete="current-password"
+            >
+
+
+            <button
+                type="button"
+                class="login-btn"
+                onclick="login()">
+
+                Login
+
+            </button>
+
+
+            <p
+                id="login-error"
+                class="login-error">
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+async function login() {
+
+    const username =
+        document.getElementById(
+            "login-username"
+        ).value.trim();
+
+
+    const password =
+        document.getElementById(
+            "login-password"
+        ).value;
+
+
+    const error =
+        document.getElementById(
+            "login-error"
+        );
+
+
+    error.innerText = "";
+
+
+    if (username === "" || password === "") {
+
+        error.innerText =
+            "Please enter username and password.";
+
+        return;
+    }
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/auth/login",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            error.innerText =
+                "Invalid username or password.";
+
+            return;
+        }
+
+
+        const result =
+            await response.json();
+
+
+        if (result.success) {
+
+            window.location.href =
+                "/index.html";
+
+        } else {
+
+            error.innerText =
+                "Login failed.";
+        }
+
+
+    } catch (err) {
+
+        console.error(
+            "Login error:",
+            err
+        );
+
+        error.innerText =
+            "Unable to connect to server.";
+    }
+}
+
+
+/*
+   Press ENTER to login
+*/
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Enter") {
+            login();
+        }
+
+    }
+);
+
+
+/*
+   If already logged in,
+   directly open dashboard.
+*/
+
+async function checkExistingLogin() {
+
+    try {
+
+        const response =
+            await fetch("/api/auth/me");
+
+
+        if (response.ok) {
+
+            window.location.href =
+                "/index.html";
+        }
+
+    } catch (error) {
+
+        console.log(
+            "No active login session."
+        );
+    }
+}
+
+
+checkExistingLogin();
+
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>EV Tariff Management</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            ⚡ EV TARIFF
+        </div>
+
+        <nav>
+            <button id="nav-dashboard" class="nav-btn active" onclick="showPage('dashboard')">
+                Dashboard
+            </button>
+
+            <button id="nav-stations" class="nav-btn" onclick="showPage('stations')">
+                Stations
+            </button>
+
+            <button id="nav-chargers" class="nav-btn" onclick="showPage('chargers')">
+                Chargers
+            </button>
+
+            <button id="nav-tariffs" class="nav-btn" onclick="showPage('tariffs')">
+                Tariffs
+            </button>
+
+            <button id="nav-sessions" class="nav-btn" onclick="showPage('sessions')">
+                Charging Sessions
+            </button>
+
+            <button id="nav-invoices" class="nav-btn" onclick="showPage('invoices')">
+                Invoices
+            </button>
+
+            <button id="nav-payments" class="nav-btn" onclick="showPage('payments')">
+                Payments
+            </button>
+
+            <button id="nav-expenses" class="nav-btn" onclick="showPage('expenses')">
+                Utility Expenses
+            </button>
+
+            <button id="nav-budgets" class="nav-btn" onclick="showPage('budgets')">
+                Budgets
+            </button>
+
+            <button id="nav-reports" class="nav-btn" onclick="showPage('reports')">
+                Reports
+            </button>
+        </nav>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <!-- Header -->
+        <header class="header">
+
+            <div>
+                <h1 id="page-title">Dashboard</h1>
+                <p>Autonomous EV Charging Network & Dynamic Tariff Management</p>
+            </div>
+
+            <div class="admin-box">
+                <div class="user-info">
+                    <strong id="logged-username">User</strong>
+                    <span id="logged-role">Role</span>
+                </div>
+
+                <button class="logout-btn" onclick="logout()">
+                    Logout
+                </button>
+            </div>
+
+        </header>
+
+
+        <!-- Dashboard -->
+        <section id="dashboard" class="page active-page">
+
+            <h2>System Overview</h2>
+
+            <div class="cards">
+
+                <div class="card">
+                    <div class="card-icon">📍</div>
+
+                    <div>
+                        <p>Total Stations</p>
+                        <h2 id="station-count">0</h2>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+
+                    <div>
+                        <p>Available Chargers</p>
+                        <h2 id="charger-count">0</h2>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-icon">🔋</div>
+
+                    <div>
+                        <p>Active Sessions</p>
+                        <h2 id="session-count">0</h2>
+                    </div>
+                </div>
+
+
+                <div class="card">
+                    <div class="card-icon">₹</div>
+
+                    <div>
+                        <p>Total Revenue</p>
+                        <h2 id="revenue">₹0</h2>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <div class="dashboard-section">
+
+                <div>
+                    <h2>EV Charging Management</h2>
+
+                    <p>
+                        Monitor charging stations, chargers, dynamic tariffs,
+                        charging sessions, invoices, payments and operational
+                        expenses from one dashboard.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- Other pages -->
+
+        <section id="stations" class="page">
+
+    <div class="section-header">
+        <div>
+            <h2>Charging Stations</h2>
+            <p>Manage EV charging station locations.</p>
+        </div>
+
+        <button id="add-station-btn" class="primary-btn" onclick="showStationForm()">
+            + Add Station
+        </button>
+    </div>
+
+
+    <!-- ADD / EDIT FORM -->
+
+    <div id="station-form-box" class="form-box hidden">
+
+        <h3 id="station-form-title">Add Station</h3>
+
+        <input type="hidden" id="station-id">
+
+        <div class="form-grid">
+
+            <div>
+                <label>Station Name</label>
+                <input
+                    type="text"
+                    id="station-name"
+                    placeholder="Enter station name">
+            </div>
+
+            <div>
+                <label>Location</label>
+                <input
+                    type="text"
+                    id="station-location"
+                    placeholder="Enter location">
+            </div>
+
+            <div>
+                <label>Status</label>
+
+                <select id="station-status">
+                    <option value="ACTIVE">ACTIVE</option>
+                    <option value="INACTIVE">INACTIVE</option>
+                    <option value="MAINTENANCE">MAINTENANCE</option>
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+
+            <button class="primary-btn" onclick="saveStation()">
+                Save
+            </button>
+
+            <button class="secondary-btn" onclick="hideStationForm()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- STATION TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Station Name</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="station-table-body">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+        <section id="chargers" class="page">
+
+    <div class="section-header">
+        <div>
+            <h2>Chargers</h2>
+            <p>Manage EV chargers and their availability.</p>
+        </div>
+
+        <button id="add-charger-btn" class="primary-btn" onclick="showChargerForm()">
+            + Add Charger
+        </button>
+    </div>
+
+    <!-- ADD / EDIT FORM -->
+
+    <div id="charger-form-box" class="form-box hidden">
+
+        <h3 id="charger-form-title">Add Charger</h3>
+
+        <input type="hidden" id="charger-id">
+
+        <div class="form-grid">
+
+            <div>
+                <label>Charger Name</label>
+                <input
+                    type="text"
+                    id="charger-name"
+                    placeholder="Example: C02">
+            </div>
+
+            <div>
+                <label>Charger Type</label>
+
+                <select id="charger-type">
+                    <option value="AC">AC</option>
+                    <option value="DC FAST">DC FAST</option>
+                    <option value="DC ULTRA FAST">DC ULTRA FAST</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Status</label>
+
+                <select id="charger-status">
+                    <option value="AVAILABLE">AVAILABLE</option>
+                    <option value="OCCUPIED">OCCUPIED</option>
+                    <option value="MAINTENANCE">MAINTENANCE</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Station</label>
+
+                <select id="charger-station">
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+
+            <button class="primary-btn" onclick="saveCharger()">
+                Save
+            </button>
+
+            <button class="secondary-btn" onclick="hideChargerForm()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- CHARGER TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Charger</th>
+                    <th>Type</th>
+                    <th>Station</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="charger-table-body">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+        <section id="tariffs" class="page">
+
+    <div class="section-header">
+
+        <div>
+            <h2>Dynamic Tariffs</h2>
+            <p>Configure charging rates and peak-hour pricing.</p>
+        </div>
+
+        <button id="add-tariff-btn" class="primary-btn" onclick="showTariffForm()">
+            + Add Tariff
+        </button>
+
+    </div>
+
+
+    <!-- ADD / EDIT TARIFF FORM -->
+
+    <div id="tariff-form-box" class="form-box hidden">
+
+        <h3 id="tariff-form-title">Add Tariff</h3>
+
+        <input type="hidden" id="tariff-id">
+
+        <div class="form-grid">
+
+            <div>
+                <label>Station</label>
+
+                <select id="tariff-station">
+                </select>
+            </div>
+
+
+            <div>
+                <label>Base Rate (₹ / kWh)</label>
+
+                <input
+                    type="number"
+                    id="tariff-base-rate"
+                    step="0.01"
+                    min="0"
+                    placeholder="Example: 15">
+            </div>
+
+
+            <div>
+                <label>Peak Multiplier</label>
+
+                <input
+                    type="number"
+                    id="tariff-multiplier"
+                    step="0.1"
+                    min="1"
+                    placeholder="Example: 1.5">
+            </div>
+
+
+            <div>
+                <label>Peak Start Time</label>
+
+                <input
+                    type="time"
+                    id="tariff-start">
+            </div>
+
+
+            <div>
+                <label>Peak End Time</label>
+
+                <input
+                    type="time"
+                    id="tariff-end">
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button class="primary-btn" onclick="saveTariff()">
+                Save
+            </button>
+
+            <button class="secondary-btn" onclick="hideTariffForm()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- TARIFF TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Station</th>
+                    <th>Base Rate</th>
+                    <th>Peak Time</th>
+                    <th>Multiplier</th>
+                    <th>Peak Rate</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody id="tariff-table-body">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+        <section id="sessions" class="page">
+
+    <div class="section-header">
+        <div>
+            <h2>Charging Sessions</h2>
+            <p>Start and monitor EV charging sessions.</p>
+        </div>
+
+        <button id="start-session-btn" class="primary-btn" onclick="showSessionForm()">
+            + Start Charging
+        </button>
+    </div>
+
+    <!-- START SESSION FORM -->
+
+    <div id="session-form-box" class="form-box hidden">
+
+        <h3>Start New Charging Session</h3>
+
+        <div class="form-grid">
+
+            <div>
+                <label>Driver Name</label>
+                <input
+                    type="text"
+                    id="session-driver"
+                    placeholder="Enter driver name">
+            </div>
+
+            <div>
+                <label>Vehicle Number</label>
+                <input
+                    type="text"
+                    id="session-vehicle"
+                    placeholder="Example: TN38EV1234">
+            </div>
+
+            <div>
+                <label>Available Charger</label>
+                <select id="session-charger">
+                </select>
+            </div>
+
+            <div>
+                <label>Tariff</label>
+                <select id="session-tariff">
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+
+            <button class="primary-btn" onclick="startChargingSession()">
+                Start Charging
+            </button>
+
+            <button class="secondary-btn" onclick="hideSessionForm()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- SESSION TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Driver</th>
+                    <th>Vehicle</th>
+                    <th>Charger</th>
+                    <th>Start Time</th>
+                    <th>Energy</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="session-table-body">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+        <section id="invoices" class="page">
+
+    <div class="section-header">
+        <div>
+            <h2>Invoices</h2>
+            <p>Generate invoices for completed charging sessions.</p>
+        </div>
+
+        <button id="generate-invoice-btn" class="primary-btn" onclick="showInvoiceForm()">
+            + Generate Invoice
+        </button>
+    </div>
+
+    <!-- GENERATE INVOICE -->
+
+    <div id="invoice-form-box" class="form-box hidden">
+
+        <h3>Generate Invoice</h3>
+
+        <div class="form-grid">
+
+            <div>
+                <label>Completed Charging Session</label>
+
+                <select id="invoice-session">
+                </select>
+            </div>
+
+        </div>
+
+        <div class="form-actions">
+
+            <button class="primary-btn" onclick="generateInvoice()">
+                Generate
+            </button>
+
+            <button class="secondary-btn" onclick="hideInvoiceForm()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- INVOICE TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Invoice ID</th>
+                    <th>Session</th>
+                    <th>Driver</th>
+                    <th>Vehicle</th>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>Payment Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="invoice-table-body">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+        <section id="payments" class="page">
+
+    <div class="section-header">
+
+        <div>
+            <h2>Payments</h2>
+            <p>Process and view EV charging payments.</p>
+        </div>
+
+        <button id="make-payment-btn" class="primary-btn" onclick="showPaymentForm()">
+            + Make Payment
+        </button>
+
+    </div>
+
+
+    <!-- PAYMENT FORM -->
+
+    <div id="payment-form-box" class="form-box hidden">
+
+        <h3>Make Payment</h3>
+
+        <div class="form-grid">
+
+            <div>
+
+                <label>Unpaid Invoice</label>
+
+                <select id="payment-invoice">
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>Payment Method</label>
+
+                <select id="payment-method">
+
+                    <option value="UPI">
+                        UPI
+                    </option>
+
+                    <option value="CARD">
+                        CARD
+                    </option>
+
+                    <option value="NET BANKING">
+                        NET BANKING
+                    </option>
+
+                    <option value="CASH">
+                        CASH
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                class="primary-btn"
+                onclick="makePayment()">
+
+                Pay
+
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="hidePaymentForm()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- PAYMENT TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Payment ID</th>
+                    <th>Invoice</th>
+                    <th>Driver</th>
+                    <th>Amount</th>
+                    <th>Method</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="payment-table-body">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+        <section id="expenses" class="page">
+
+    <div class="section-header">
+
+        <div>
+            <h2>Utility Expenses</h2>
+            <p>Manage electricity and other utility expenses for EV charging stations.</p>
+        </div>
+
+        <button id="add-expense-btn" class="primary-btn" onclick="showExpenseForm()">
+            + Add Expense
+        </button>
+
+    </div>
+
+
+    <!-- EXPENSE FORM -->
+
+    <div id="expense-form-box" class="form-box hidden">
+
+        <h3 id="expense-form-title">Add Utility Expense</h3>
+
+        <input type="hidden" id="expense-id">
+
+
+        <div class="form-grid">
+
+            <div>
+                <label>Station</label>
+
+                <select id="expense-station">
+                    <option value="">Select Station</option>
+                </select>
+            </div>
+
+
+            <div>
+                <label>Expense Type</label>
+
+                <select id="expense-type">
+                    <option value="ELECTRICITY BILL">
+                        Electricity Bill
+                    </option>
+
+                    <option value="MAINTENANCE">
+                        Maintenance
+                    </option>
+
+                    <option value="INTERNET">
+                        Internet
+                    </option>
+
+                    <option value="OTHER">
+                        Other
+                    </option>
+                </select>
+            </div>
+
+
+            <div>
+                <label>Provider Name</label>
+
+                <input
+                    type="text"
+                    id="expense-provider"
+                    placeholder="Example: Power Grid Utility">
+            </div>
+
+
+            <div>
+                <label>Amount</label>
+
+                <input
+                    type="number"
+                    id="expense-amount"
+                    placeholder="Enter amount"
+                    min="0"
+                    step="0.01">
+            </div>
+
+
+            <div>
+                <label>Expense Date</label>
+
+                <input
+                    type="date"
+                    id="expense-date">
+            </div>
+
+
+            <div>
+                <label>Payment Status</label>
+
+                <select id="expense-status">
+
+                    <option value="UNPAID">
+                        UNPAID
+                    </option>
+
+                    <option value="PAID">
+                        PAID
+                    </option>
+
+                </select>
+            </div>
+
+
+            <div>
+                <label>Payment Method</label>
+
+                <select id="expense-payment-method">
+
+                    <option value="">
+                        Not Paid Yet
+                    </option>
+
+                    <option value="UPI">
+                        UPI
+                    </option>
+
+                    <option value="BANK TRANSFER">
+                        Bank Transfer
+                    </option>
+
+                    <option value="CASH">
+                        Cash
+                    </option>
+
+                    <option value="CARD">
+                        Card
+                    </option>
+
+                </select>
+            </div>
+
+
+            <div>
+                <label>Reference Number</label>
+
+                <input
+                    type="text"
+                    id="expense-reference"
+                    placeholder="Example: GRIDPAY1001">
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                class="primary-btn"
+                onclick="saveExpense()">
+
+                Save Expense
+
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="hideExpenseForm()">
+
+                Cancel
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- EXPENSE TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Station</th>
+                    <th>Type</th>
+                    <th>Provider</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Method</th>
+                    <th>Reference</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody id="expense-table-body">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+
+      <section id="budgets" class="page">
+
+    <div class="section-header">
+        <div>
+            <h2>Budgets</h2>
+            <p>Manage operational budgets for EV charging stations.</p>
+        </div>
+
+        <button id="add-budget-btn" class="primary-btn" onclick="showBudgetForm()">
+            + Add Budget
+        </button>
+    </div>
+
+
+    <!-- BUDGET FORM -->
+
+    <div id="budget-form-box" class="form-box hidden">
+
+        <h3 id="budget-form-title">Add Budget</h3>
+
+        <input type="hidden" id="budget-id">
+
+        <div class="form-grid">
+
+            <div>
+                <label>Station</label>
+                <select id="budget-station">
+                    <option value="">Select Station</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Budget Name</label>
+                <input
+                    type="text"
+                    id="budget-name"
+                    placeholder="Example: September Operations Budget">
+            </div>
+
+            <div>
+                <label>Budget Amount</label>
+                <input
+                    type="number"
+                    id="budget-amount"
+                    placeholder="Enter total budget"
+                    min="0"
+                    step="0.01">
+            </div>
+
+            <div>
+                <label>Spent Amount</label>
+                <input
+                    type="number"
+                    id="budget-spent"
+                    placeholder="Enter spent amount"
+                    min="0"
+                    step="0.01">
+            </div>
+
+            <div>
+                <label>Start Date</label>
+                <input
+                    type="date"
+                    id="budget-start">
+            </div>
+
+            <div>
+                <label>End Date</label>
+                <input
+                    type="date"
+                    id="budget-end">
+            </div>
+
+        </div>
+
+
+        <div class="form-actions">
+
+            <button
+                class="primary-btn"
+                onclick="saveBudget()">
+                Save Budget
+            </button>
+
+            <button
+                class="secondary-btn"
+                onclick="hideBudgetForm()">
+                Cancel
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- BUDGET TABLE -->
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Budget Name</th>
+                    <th>Station</th>
+                    <th>Total Budget</th>
+                    <th>Spent</th>
+                    <th>Remaining</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="budget-table-body">
+            </tbody>
+
+        </table>
+
+    </div>
+
+</section> 
+
+<section id="reports" class="page">
+
+    <div class="section-header">
+        <div>
+            <h2>Financial & Site Reports</h2>
+            <p>
+                View profit and loss, charging-site yield
+                and operational budget performance.
+            </p>
+        </div>
+    </div>
+
+
+    <!-- PROFIT AND LOSS -->
+
+    <div class="report-section">
+
+        <h3>Profit & Loss Report</h3>
+
+        <div class="report-grid">
+
+            <div class="report-card">
+                <h4>Charging Revenue</h4>
+                <p id="report-revenue">₹0.00</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Utility Expenses</h4>
+                <p id="report-expenses">₹0.00</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Profit / Loss</h4>
+                <p id="report-profit">₹0.00</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Result</h4>
+                <p id="report-result">-</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SITE YIELD -->
+
+    <div class="report-section">
+
+        <h3>Site Yield Report</h3>
+
+        <div class="report-selector">
+
+            <select id="report-station">
+                <option value="">Select Station</option>
+            </select>
+
+            <button
+                class="primary-btn"
+                onclick="loadSiteYield()">
+                Generate Site Report
+            </button>
+
+        </div>
+
+
+        <div
+            id="site-yield-result"
+            class="report-grid hidden">
+
+            <div class="report-card">
+                <h4>Station</h4>
+                <p id="yield-station">-</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Completed Sessions</h4>
+                <p id="yield-sessions">0</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Energy Delivered</h4>
+                <p id="yield-energy">0 kWh</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Charging Revenue</h4>
+                <p id="yield-revenue">₹0.00</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Utility Expenses</h4>
+                <p id="yield-expenses">₹0.00</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Net Yield</h4>
+                <p id="yield-net">₹0.00</p>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- BUDGET REPORT -->
+
+    <div class="report-section">
+
+        <h3>Budget Performance Report</h3>
+
+        <div class="report-selector">
+
+            <select id="report-budget">
+                <option value="">Select Budget</option>
+            </select>
+
+            <button
+                class="primary-btn"
+                onclick="loadBudgetReport()">
+                Generate Budget Report
+            </button>
+
+        </div>
+
+
+        <div
+            id="budget-report-result"
+            class="report-grid hidden">
+
+            <div class="report-card">
+                <h4>Budget</h4>
+                <p id="report-budget-name">-</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Planned Amount</h4>
+                <p id="report-budget-total">₹0.00</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Spent</h4>
+                <p id="report-budget-spent">₹0.00</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Remaining</h4>
+                <p id="report-budget-remaining">₹0.00</p>
+            </div>
+
+            <div class="report-card">
+                <h4>Budget Used</h4>
+                <p id="report-budget-percent">0%</p>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+    </main>
+
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
